@@ -1,7 +1,16 @@
-//#include "Vector3.h";
+#ifndef TRIANGLEFACEDATA_H
+#define TRIANGLEFACEDATA_H
+
+#include "Vector3Point.h";
 struct TriangleFaceData
 {
-	Vector3 p1;
-	Vector3 p2;
-	Vector3 p3;
+	int index;
+	Vector3Point p1;
+	int p1Index;
+	Vector3Point p2;
+	int p2Index;
+	Vector3Point p3;
+	int p3Index;
 };
+
+#endif

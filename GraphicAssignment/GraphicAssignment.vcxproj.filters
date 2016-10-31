@@ -21,6 +21,9 @@
     <ClCompile Include="MFileParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HalfEdgeEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="meshes\bunny.m">
@@ -40,17 +43,26 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HalfEdgeEncoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HalfEdge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="MFileParser.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="RenderMode.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TriangleFaceData.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3Point.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

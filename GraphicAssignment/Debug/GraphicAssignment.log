@@ -1,21 +1,26 @@
-﻿Build started 29/9/2016 7:24:38 PM.
+﻿Build started 12/10/2016 4:29:26 PM.
 Project "C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\GraphicAssignment\GraphicAssignment.vcxproj" on node 2 (Build target(s)).
 ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt MFileParser.cpp
-  MFileParser.cpp
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.cpp(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+  main.cpp
 c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.cpp(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\trianglefacedata.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\halfedgeencoder.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\halfedgeencoder.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\halfedgeencoder.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\halfedgeencoder.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\halfedgeencoder.h(6): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 Link:
-  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glut32.lib glui32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.lib" /MACHINE:X86 Debug\main.obj
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glut32.lib glui32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.lib" /MACHINE:X86 Debug\HalfEdgeEncoder.obj
+  Debug\main.obj
   Debug\MFileParser.obj
   GraphicAssignment.vcxproj -> C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.exe
 Done Building Project "C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\GraphicAssignment\GraphicAssignment.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.78
+Time Elapsed 00:00:02.26

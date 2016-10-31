@@ -65,6 +65,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HalfEdgeEncoder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MFileParser.cpp" />
   </ItemGroup>
@@ -76,10 +77,13 @@
     <None Include="meshes\knot.m" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HalfEdge.h" />
+    <ClInclude Include="HalfEdgeEncoder.h" />
+    <ClInclude Include="RenderMode.h" />
     <ClInclude Include="TriangleFaceData.h" />
     <ClInclude Include="MFileParser.h" />
     <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector3Point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
