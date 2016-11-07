@@ -17,6 +17,10 @@ public:
 	void display();
 	std::vector<Vector3Point> *m_vertices;
 	std::vector<TriangleFaceData> *m_faces;
+	Vector3Point minCoord;
+	Vector3Point maxCoord;
+	void getBestFitOrtho3d();
+	void setBoundingBox();
 private:
 	int m_render_mode;
 	//std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;

@@ -38,11 +38,43 @@ bool MFileParser::parserFile(char* path)
 		// else : parse lineHeader
 		else
 		{
+			float minX, minY, minZ, maxX, maxY, maxZ;
 			if (strcmp(lineHeader, "Vertex") == 0)
 			{
 				Vector3Point vertex;
 				fscanf_s(file, "%d %f %f %f\n", &vertex.index, &vertex.x, &vertex.y, &vertex.z);
 				m_vertices->push_back(vertex);
+				
+				if (vertex.index == 1)
+				{
+					minX = maxX = vertex.x;
+					minY = maxY = vertex.y;
+					minZ = maxZ = vertex.z;
+				}
+				if (vertex.x < minX)
+				{
+					minX = vertex.x;
+				}
+				if (vertex.y < minY)
+				{
+					minY = vertex.y;
+				}
+				if (vertex.z < minZ)
+				{
+					minZ = vertex.z;
+				}
+				if (vertex.x > maxX)
+				{
+					maxX = vertex.x;
+				}
+				if (vertex.y > maxY)
+				{
+					maxY = vertex.y;
+				}
+				if (vertex.z > maxZ)
+				{
+					maxZ = vertex.z;
+				}
 			}
 			else if (strcmp(lineHeader, "Face") == 0){
 				std::string vertex1, vertex2, vertex3;
@@ -56,13 +88,19 @@ bool MFileParser::parserFile(char* path)
 				f.p1 = m_vertices->at(p1-1);
 				f.p2 = m_vertices->at(p2 - 1);
 				f.p3 = m_vertices->at(p3 - 1);
-				m_faces->push_back(f);
 				
+				m_faces->push_back(f);
 			}
+			minCoord = Vector3Point(minX, minY, minZ);
+			maxCoord = Vector3Point(maxX, maxY, maxZ);
 		}
-		
 	}
 	return true;
+}
+
+void MFileParser::setBoundingBox()
+{
+
 }
 
 void MFileParser::display()
@@ -93,6 +131,7 @@ void MFileParser::display()
 	case FLAT_SHADING:
 		glShadeModel(GL_FLAT);
 		glBegin(GL_TRIANGLES);
+
 		for (unsigned int i = 0; i < m_faces->size(); i++)
 		{
 			glColor3ub(127, 127, 127);
@@ -104,6 +143,8 @@ void MFileParser::display()
 		break;
 	case SMOOTH_SHADING:
 		glShadeModel(GL_SMOOTH);
+		glEnable(GL_LIGHTING);
+		glColor3f(0.4f, 0.4f, 1.0f);
 		glBegin(GL_TRIANGLES);
 		for (unsigned int i = 0; i < m_faces->size(); i++)
 		{

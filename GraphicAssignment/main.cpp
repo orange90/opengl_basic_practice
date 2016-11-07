@@ -1,36 +1,91 @@
 #include "MfileParser.h"
 #include <Gl\glut.h>//should be put at the last
+#include "RenderMode.h"
 #define RADPERDEG 0.0174533
 
 MFileParser *parser;
+int mainWin;
+double sphi = 90.0, stheta = 45.0, sdepth = 10;	// for simple trackball
+double xpan = 0.0, ypan = 0.0;				// for simple trackball
+double zNear = 1.0, zFar = 100.0;
+double g_fov = 45.0;
+Vector3Point g_center;
 void myDisplay(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	// Just clean the screen
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// setup the perspective projection
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60, 1, .1, 100);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(0, 0, 10, g_center.x,g_center.y,g_center.z, 0, 1, 0);
+
+	//glClear(GL_COLOR_BUFFER_BIT);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	glTranslatef(xpan, ypan, -sdepth);
+	glRotatef(-stheta, 1.0, 0.0, 0.0);
+	//glRotatef(sphi, 0.0, 1.0, 0.0);
+	glTranslatef(-g_center.x, -g_center.y, -g_center.z);
+	//gluLookAt(0,0,5,0,0,0,0,1,0); 
 	//drawAxes(10.0);
+	glEnable(GL_CULL_FACE);
 	parser->display();
+	g_center = (parser->maxCoord + parser->minCoord) * 0.5;
+	//glTranslatef(-g_center.x, -g_center.y, -g_center.z);
 	glFlush();
+	glutSwapBuffers();
+	glutPostRedisplay();
 }
 
-void init(void)
+void initGL(void)
 {
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(500, 500);
+	
+	glClearColor(1.0, 1.0, 1.0, 1.0);
+	glPolygonOffset(1.0, 1.0);
+	//glDepthFunc(GL_LEQUAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT, GL_DIFFUSE);
+	GLfloat light0Position[] = { 0, 1, 0, 1.0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
+	glEnable(GL_LIGHT0);
+
 	glClearColor(1.0, 1.0, 1.0, 0.0);
-	glMatrixMode(GL_PROJECTION);
+	glMatrixMode(GL_MODELVIEW);
 	gluOrtho2D(-9.2,9.2, -9.2, 9.2);
 	parser = new MFileParser();
 	parser->parserFile("meshes/cap.m");
 	parser->setmode(LINE_MODE);
+
 }
 
+void menuCallBack(int key)
+{
 
+}
+
+void initMenu()
+{
+	mainWin = glutCreateWindow("Huang Zhe 's Graphic Assignment");
+	//GLUI *glui = GLUI_Master.create_glui_subwindow(mainWin, GLUI_SUBWINDOW_RIGHT);
+	//glui->add_button("Open File", -1, menuCallBack);
+}
 
 int main(int argc, char * argv[])
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
-	glutInitWindowPosition(50, 100);
-	glutInitWindowSize(400, 300);
-	glutCreateWindow("OpenGL");
-	init();
+	initMenu();
+	initGL();
 	glutDisplayFunc(&myDisplay);
 	glutMainLoop();
 	return 0;
