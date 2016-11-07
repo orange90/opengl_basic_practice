@@ -98,10 +98,6 @@ bool MFileParser::parserFile(char* path)
 	return true;
 }
 
-void MFileParser::setBoundingBox()
-{
-
-}
 
 void MFileParser::display()
 {
@@ -158,5 +154,40 @@ void MFileParser::display()
 	default:
 		break;
 	}
+	
+}
+
+void MFileParser::setBoundingBox()
+{
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(minCoord.x, minCoord.y, minCoord.z);
+	glVertex3f(minCoord.x, minCoord.y, maxCoord.z);
+	glVertex3f(minCoord.x, maxCoord.y, maxCoord.z);
+	glVertex3f(minCoord.x, maxCoord.y, minCoord.z);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(maxCoord.x, minCoord.y, minCoord.z);
+	glVertex3f(maxCoord.x, minCoord.y, maxCoord.z);
+	glVertex3f(maxCoord.x, maxCoord.y, maxCoord.z);
+	glVertex3f(maxCoord.x, maxCoord.y, minCoord.z);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(maxCoord.x, minCoord.y, minCoord.z);
+	glVertex3f(maxCoord.x, minCoord.y, maxCoord.z);
+	glVertex3f(minCoord.x, minCoord.y, maxCoord.z);
+	glVertex3f(minCoord.x, minCoord.y, minCoord.z);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(minCoord.x, minCoord.y, maxCoord.z);
+	glVertex3f(maxCoord.x, minCoord.y, maxCoord.z);
+	glVertex3f(maxCoord.x, maxCoord.y, maxCoord.z);
+	glVertex3f(minCoord.x, maxCoord.y, maxCoord.z);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(minCoord.x, minCoord.y, minCoord.z);
+	glVertex3f(maxCoord.x, minCoord.y, minCoord.z);
+	glVertex3f(maxCoord.x, maxCoord.y, minCoord.z);
+	glVertex3f(minCoord.x, maxCoord.y, minCoord.z);
+	glEnd();
 	
 }
