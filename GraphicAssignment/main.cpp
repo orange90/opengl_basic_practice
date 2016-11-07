@@ -5,7 +5,6 @@
 #define TRANSFORM_NONE    0 
 #define TRANSFORM_ROTATE  1
 #define TRANSFORM_SCALE 2 
-#define RADPERDEG 0.10
 
 MFileParser *parser;
 int mainWin;
@@ -25,12 +24,11 @@ static float scale_size = 1;
 static int xform_mode = 0;
 
 void drawGround();
-void drawAxis();
-void draw_z_axis();
-void draw_y_axis();
-void draw_x_axis();
+void drawAxis(float rate);
+void draw_z_axis(float rate);
+void draw_y_axis(float rate);
+void draw_x_axis(float rate);
 void mymotion(int x, int y);
-void drawAxes(GLdouble r);
 void mymouse(int button, int state, int x, int y);
 
 void myDisplay(void)
@@ -42,6 +40,10 @@ void myDisplay(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60, 1, .1, 100);
+
+	//glEnable(GL_LINE_SMOOTH);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -60,16 +62,17 @@ void myDisplay(void)
 	glRotatef(y_angle, 1, 0, 0);
 	parser->display();
 	parser->setBoundingBox();
+	glPushMatrix();
+		glTranslated(parser->minCoord.x, parser->minCoord.y, parser->minCoord.z);
+		drawAxis(0.2);
+	glPopMatrix();
 	g_center = (parser->maxCoord + parser->minCoord) * 0.5;
 	drawGround();
-	//drawAxis();
-	//drawAxes(10);
-	//glTranslatef(-g_center.x, -g_center.y, -g_center.z);
+	drawAxis(1);
 	
 	glFlush();
 	glutSwapBuffers();
 	//glutPostRedisplay();
-
 
 }
 
@@ -91,12 +94,10 @@ void initGL(void)
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
-	gluOrtho2D(-9.2,9.2, -9.2, 9.2);
+	gluOrtho2D(-10,10, -10, 10);
 	parser = new MFileParser();
 	parser->parserFile("meshes/cap.m");
-	parser->setmode(FLAT_SHADING);
-	
-
+	parser->setmode(LINE_MODE);
 }
 
 void menuCallBack(int key)
@@ -196,127 +197,52 @@ void drawGround()
 		MyDrawLineFunc(i, -100, i, 100);
 		MyDrawLineFunc(-100, i, 100, i);
 	}
-
 }
 
 
-void draw_z_axis()
+void draw_z_axis(float rate)
 {
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glPushMatrix();
-		glTranslated(0, 0, 10);
-		glutSolidCone(1, 10, 30, 30);
-		glColor3f(0, 0, 1);
-	
+	//glLoadIdentity();
 	GLUquadric *qobj = gluNewQuadric();
 	gluQuadricDrawStyle(qobj, GLU_FILL);
 	gluQuadricNormals(qobj, GLU_SMOOTH);
-
-	gluCylinder(qobj,1,1,10,30,30);
+	gluCylinder(qobj, .1* rate, .1* rate, 10 * rate, 30, 30);
 	gluDeleteQuadric(qobj);
+	glPushMatrix();
+	glTranslated(0, 0, 10 * rate);
+	glutSolidCone(0.2*rate, 1 * rate, 32, 32);
 	glPopMatrix();
 }
 
-void draw_y_axis()
+void draw_y_axis(float rate)
 {
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//glLoadIdentity();
 	glPushMatrix();
 		glRotated(-90, 1, 0, 0);
-		draw_z_axis();
+		draw_z_axis(rate);
 	glPopMatrix();
 }
 
-void draw_x_axis()
+void draw_x_axis(float rate)
 {
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//glLoadIdentity();
 	glPushMatrix();
 		glRotated(90, 0, 1, 0);
-		draw_z_axis();
+		draw_z_axis(rate);
 	glPopMatrix();
 }
 
-void drawAxis()
+void drawAxis(float rate)
 {
 	glColor3f(0, 0, 1);
-	draw_z_axis();
+	draw_z_axis(rate);
 	glColor3f(0, 1, 0);
-	draw_y_axis();
+	draw_y_axis(rate);
 	glColor3f(1, 0, 0);
-	draw_x_axis();
+	draw_x_axis(rate);
 }
 
 
-/////////
-
-
-void Arrow(GLdouble x1,GLdouble y1,GLdouble z1,GLdouble x2,GLdouble y2,GLdouble z2,GLdouble D)
-{
-  double x=x2-x1;
-  double y=y2-y1;
-  double z=z2-z1;
-  double L=sqrt(x*x+y*y+z*z);
-
-    GLUquadricObj *quadObj;
-
-    glPushMatrix ();
-
-      glTranslated(x1,y1,z1);
-
-      if((x!=0.)||(y!=0.)) {
-        glRotated(atan2(y,x)/RADPERDEG,0.,0.,1.);
-        glRotated(atan2(sqrt(x*x+y*y),z)/RADPERDEG,0.,1.,0.);
-      } else if (z<0){
-        glRotated(180,1.,0.,0.);
-      }
-
-      glTranslatef(0,0,L-4*D);
-
-      quadObj = gluNewQuadric ();
-      gluQuadricDrawStyle (quadObj, GLU_FILL);
-      gluQuadricNormals (quadObj, GLU_SMOOTH);
-      gluCylinder(quadObj, 2*D, 0.0, 4*D, 32, 1);
-      gluDeleteQuadric(quadObj);
-
-      quadObj = gluNewQuadric ();
-      gluQuadricDrawStyle (quadObj, GLU_FILL);
-      gluQuadricNormals (quadObj, GLU_SMOOTH);
-      gluDisk(quadObj, 0.0, 2*D, 32, 1);
-      gluDeleteQuadric(quadObj);
-
-      glTranslatef(0,0,-L+4*D);
-
-      quadObj = gluNewQuadric ();
-      gluQuadricDrawStyle (quadObj, GLU_FILL);
-      gluQuadricNormals (quadObj, GLU_SMOOTH);
-      gluCylinder(quadObj, D, D, L-4*D, 32, 1);
-      gluDeleteQuadric(quadObj);
-
-      quadObj = gluNewQuadric ();
-      gluQuadricDrawStyle (quadObj, GLU_FILL);
-      gluQuadricNormals (quadObj, GLU_SMOOTH);
-      gluDisk(quadObj, 0.0, D, 32, 1);
-      gluDeleteQuadric(quadObj);
-
-    glPopMatrix ();
-
-}
-void drawAxes(GLdouble length)
-{
-    glPushMatrix();
-    glTranslatef(-length,0,0);
-    Arrow(0,0,0, 2*length,0,0, 0.2);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0,-length,0);
-    Arrow(0,0,0, 0,2*length,0, 0.2);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0,0,-length);
-    Arrow(0,0,0, 0,0,2*length, 0.2);
-    glPopMatrix();
-}
