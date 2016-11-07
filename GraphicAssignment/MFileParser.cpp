@@ -104,6 +104,7 @@ void MFileParser::display()
 	switch (m_render_mode)
 	{
 	case POINT_MODE:
+		glPointSize(2);
 		glBegin(GL_POINTS);
 		for (unsigned int i = 0; i < m_vertices->size(); i++)
 		{

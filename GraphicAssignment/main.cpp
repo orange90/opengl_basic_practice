@@ -6,6 +6,8 @@
 #define TRANSFORM_ROTATE  1
 #define TRANSFORM_SCALE 2 
 
+#define	MODE_CHOOSE_BOX 1001
+
 MFileParser *parser;
 int mainWin;
 GLUI_Rotation *glRotateBall;
@@ -22,6 +24,8 @@ static float scale_size = 1;
 
 
 static int xform_mode = 0;
+int initRenderMode = LINE_MODE;
+GLUI_Listbox *modeList;
 
 void drawGround();
 void drawAxis(float rate);
@@ -72,7 +76,7 @@ void myDisplay(void)
 	
 	glFlush();
 	glutSwapBuffers();
-	//glutPostRedisplay();
+	glutPostRedisplay();
 
 }
 
@@ -81,14 +85,17 @@ void initGL(void)
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(500, 500);
 	
+	//glEnable(GL_LINE_SMOOTH);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 	glPolygonOffset(1.0, 1.0);
-	//glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_DIFFUSE);
-	GLfloat light0Position[] = { 0, 1, 0, 1.0 };
+	GLfloat light0Position[] = { 2, 2, 2, 1.0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
 	glEnable(GL_LIGHT0);
 
@@ -97,12 +104,24 @@ void initGL(void)
 	gluOrtho2D(-10,10, -10, 10);
 	parser = new MFileParser();
 	parser->parserFile("meshes/cap.m");
-	parser->setmode(LINE_MODE);
+	parser->setmode(initRenderMode);
 }
 
 void menuCallBack(int key)
 {
+	if (key == MODE_CHOOSE_BOX)
+	{
+		printf("chose %i\n", modeList->get_int_val());
+		parser->setmode(modeList->get_int_val());
+		glFlush();
+		glutSwapBuffers();
+		glutPostRedisplay();
+	}
+}
 
+void selectModeCallBack(int key)
+{
+	
 }
 
 void initMenu()
@@ -113,8 +132,16 @@ void initMenu()
 	GLUI_Panel *panel = glui->add_panel("file");
 	GLUI_Button *openFileButton = glui->add_button_to_panel(panel, "Open File");
 	glRotateBall = glui->add_rotation("Rotate\nOr use mouse left button", 0, -1, menuCallBack);
+
+	modeList = glui->add_listbox_to_panel(panel, "Render Mode", &initRenderMode, MODE_CHOOSE_BOX, menuCallBack);
+	modeList->add_item(POINT_MODE, "POINT_MODE");
+	modeList->add_item(LINE_MODE,"LINE_MODE"); 
+	modeList->add_item(FLAT_SHADING,"FLAT_SHADING");
+	modeList->add_item(SMOOTH_SHADING, "SMOOTH_SHADING");
+	modeList->set_int_val(initRenderMode);
 		//("Open File", -1, menuCallBack);
 }
+
 
 int main(int argc, char * argv[])
 {
@@ -184,7 +211,7 @@ void mymotion(int x, int y)
 void MyDrawLineFunc(int a, int b, int c, int d)
 {
 	glBegin(GL_LINES);
-	glColor3f(0.9, 0.9, 0.9);
+	
 	glVertex2i(a, b);
 	glVertex2i(c, d);
 	glEnd();
@@ -192,11 +219,18 @@ void MyDrawLineFunc(int a, int b, int c, int d)
 
 void drawGround()
 {
+	glLineWidth(1);
+	glColor3f(0.8, 0.8, 0.8);
 	for (int i = -100; i <= 100; ++i) 
 	{
 		MyDrawLineFunc(i, -100, i, 100);
 		MyDrawLineFunc(-100, i, 100, i);
 	}
+	glLineWidth(2);
+	glColor3f(0, 0, 0);
+	MyDrawLineFunc(0, -100, 0, 100);
+	MyDrawLineFunc(-100, 0, 100, 0);
+	glLineWidth(1);
 }
 
 
