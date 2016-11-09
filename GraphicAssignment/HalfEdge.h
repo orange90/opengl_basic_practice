@@ -1,5 +1,5 @@
 #include "Vector3Point.h"
-
+#include <map>
 struct HE_vert;
 struct HE_face;
 struct HE_edge;
@@ -20,7 +20,6 @@ struct HE_vert
 	float nx, ny, nz;
 	HE_edge* edge;
 	std::map<HE_vert*, HE_edge*> tempEdges;//use destination vertex as key
-	HE_edge *tempEdge;
 };
 
 struct HE_face

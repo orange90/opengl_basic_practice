@@ -20,6 +20,8 @@ public:
 	void setmode(int mode);
 	void encode(std::vector<Vector3Point>* vertice,std::vector<TriangleFaceData>* faces);
 	void render();
+	void drawVertexNormal();
+
 private:
 	int render_mode;
 	void initFaceNormal();

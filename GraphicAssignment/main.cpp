@@ -24,6 +24,7 @@ double xpan = 0.0, ypan = 0.0;				// for simple trackball
 double zNear = 1.0, zFar = 100.0;
 double g_fov = 45.0;
 Vector3Point g_center;
+bool drawNormal = false;
 
 static int press_x, press_y;
 static float x_angle = 0.0;
@@ -90,7 +91,7 @@ void myDisplay(void)
 	glFlush();
 	glutSwapBuffers();
 	glutPostRedisplay();
-
+	
 }
 
 void initGL(void)
@@ -113,7 +114,7 @@ void initGL(void)
 	glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
 	glEnable(GL_LIGHT0);*/
 
-	GLfloat light_position[] = {- 1.0, 1.0, -1.0, 0.0 }; // light position
+	GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0 }; // light position
 	GLfloat white_light[] = { 1.0, 1.0, 1.0, 1.0 }; // light color
 	GLfloat lmodel_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -269,6 +270,7 @@ void MyDrawLineFunc(int a, int b, int c, int d)
 
 void drawGround()
 {
+	glDisable(GL_LIGHTING);
 	glLineWidth(1);
 	glColor3f(0.8, 0.8, 0.8);
 	for (int i = -100; i <= 100; ++i) 
@@ -281,6 +283,7 @@ void drawGround()
 	MyDrawLineFunc(0, -100, 0, 100);
 	MyDrawLineFunc(-100, 0, 100, 0);
 	glLineWidth(1);
+	glEnable(GL_LIGHTING);
 }
 
 
@@ -321,12 +324,14 @@ void draw_x_axis(float rate)
 
 void drawAxis(float rate)
 {
+	glDisable(GL_LIGHTING);
 	glColor3f(0, 0, 1);
 	draw_z_axis(rate);
 	glColor3f(0, 1, 0);
 	draw_y_axis(rate);
 	glColor3f(1, 0, 0);
 	draw_x_axis(rate);
+	glEnable(GL_LIGHTING);
 }
 
 
