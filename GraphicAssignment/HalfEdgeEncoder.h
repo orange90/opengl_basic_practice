@@ -12,7 +12,7 @@ class HalfEdgeEncoder
 public:
 	//std::vector<HE_edge>* m_edges;
 	std::vector<HE_vert*>* m_vertice;
-	std::vector<HE_face>* m_faces;
+	std::vector<HE_face*>* m_faces;
 	//use map with complexity O(1)
 	std::map<std::string,HE_edge*> m_edges;
 	HalfEdgeEncoder();
@@ -22,7 +22,9 @@ public:
 	void render();
 private:
 	int render_mode;
-	
+	void initFaceNormal();
+	void initVertexNormal();
+	void drawPolygons(HE_face* face);
 	HE_vert* getVertAtIndex(unsigned int idx);
 	HE_edge* getEdgeByKey(std::string key);
 };

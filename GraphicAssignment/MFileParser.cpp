@@ -27,7 +27,8 @@ bool MFileParser::parserFile(char* path)
 		return false;
 	}
 	printf("read ok");
-	
+	m_faces->clear();
+	m_vertices->clear();
 	while (true)
 	{
 		char lineHeader[128];
