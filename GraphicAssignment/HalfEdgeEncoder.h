@@ -21,7 +21,8 @@ public:
 	void encode(std::vector<Vector3Point>* vertice,std::vector<TriangleFaceData>* faces);
 	void render();
 	void drawVertexNormal();
-
+	bool showVertexNormal;
+	float scaleModelIntoUnitSize(Vector3Point minCorrd, Vector3Point maxCoord);
 private:
 	int render_mode;
 	void initFaceNormal();
@@ -29,5 +30,6 @@ private:
 	void drawPolygons(HE_face* face);
 	HE_vert* getVertAtIndex(unsigned int idx);
 	HE_edge* getEdgeByKey(std::string key);
+	
 };
 

@@ -1,6 +1,6 @@
 #include "HalfEdgeEncoder.h"
 #include "RenderMode.h"
-
+#include <algorithm>
 
 HalfEdgeEncoder::HalfEdgeEncoder()
 {
@@ -90,6 +90,11 @@ void HalfEdgeEncoder::encode(std::vector<Vector3Point>* vertice, std::vector<Tri
 	}
 	initFaceNormal();
 	initVertexNormal();
+
+	for (int i = 0; i < m_vertice->size(); i++)
+	{
+		m_vertice->at(i)->tempEdges.clear();//free the memory
+	}
 }
 
 void HalfEdgeEncoder::initFaceNormal()
@@ -227,6 +232,26 @@ void HalfEdgeEncoder::render()
 		default:
 			break;
 	}
+	if (showVertexNormal)
+	{
+		drawVertexNormal();
+	}
+}
+
+float HalfEdgeEncoder::scaleModelIntoUnitSize(Vector3Point minCorrd, Vector3Point maxCoord)
+{
+	float xcoord = fabs(maxCoord.x - minCorrd.x);
+	float ycoord = fabs(maxCoord.y - minCorrd.y);
+	float zcoord = fabs(maxCoord.z - minCorrd.z);
+	float max = std::max(xcoord, std::max(ycoord, zcoord));
+	float ratio = 10 / max;
+	for (size_t i = 0; i < m_vertice->size(); i++)
+	{
+		m_vertice->at(i)->position = m_vertice->at(i)->position * ratio;
+		m_vertice->at(i)->normal = m_vertice->at(i)->normal * ratio * ratio;
+	}
+
+	return ratio;
 }
 
 void HalfEdgeEncoder::drawVertexNormal()
