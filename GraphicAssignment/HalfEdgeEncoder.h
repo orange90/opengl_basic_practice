@@ -11,8 +11,11 @@ class HalfEdgeEncoder
 {
 public:
 	//std::vector<HE_edge>* m_edges;
+	bool colored;
 	std::vector<HE_vert*>* m_vertice;
 	std::vector<HE_face*>* m_faces;
+	Vector3Point maxCoordinate;
+	Vector3Point minCoordinate;
 	//use map with complexity O(1)
 	std::map<std::string,HE_edge*> m_edges;
 	HalfEdgeEncoder();

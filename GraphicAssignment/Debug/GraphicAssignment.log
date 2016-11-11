@@ -1,21 +1,28 @@
-﻿Build started 7/11/2016 10:47:32 AM.
+﻿Build started 11/11/2016 5:33:06 PM.
 Project "C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\GraphicAssignment\GraphicAssignment.vcxproj" on node 2 (Build target(s)).
 ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /Zi /clr /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /analyze- /errorReport:prompt /clr:nostdlib main.cpp
   main.cpp
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\mfileparser.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\trianglefacedata.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\MfileParser.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\MfileParser.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\MfileParser.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\MfileParser.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\MfileParser.h(5): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\TriangleFaceData.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\HalfEdgeEncoder.h(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\HalfEdgeEncoder.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\HalfEdgeEncoder.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\HalfEdgeEncoder.h(4): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\zhehuang\documents\visual studio 2013\projects\graphicassignment\graphicassignment\HalfEdgeEncoder.h(6): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 Link:
-  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glut32.lib glui32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.lib" /MACHINE:X86 Debug\HalfEdgeEncoder.obj
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glut32.lib glui32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\HalfEdgeEncoder.obj
   Debug\main.obj
   Debug\MFileParser.obj
+  "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+main.obj : warning LNK4248: unresolved typeref token (0100001B) for 'GLUquadric'; image may not run
   GraphicAssignment.vcxproj -> C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\Debug\GraphicAssignment.exe
 Done Building Project "C:\Users\zhehuang\documents\visual studio 2013\Projects\GraphicAssignment\GraphicAssignment\GraphicAssignment.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.21
+Time Elapsed 00:00:03.58

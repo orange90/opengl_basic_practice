@@ -6,6 +6,7 @@ HalfEdgeEncoder::HalfEdgeEncoder()
 {
 	m_vertice = new std::vector<HE_vert*>();
 	m_faces = new std::vector<HE_face*>();
+	colored = false;
 }
 
 HalfEdgeEncoder::~HalfEdgeEncoder()
@@ -177,6 +178,15 @@ void HalfEdgeEncoder::drawPolygons(HE_face* face)
 	do
 	{
 		glNormal3f(currentEdge->vert->normal.x, currentEdge->vert->normal.y, currentEdge->vert->normal.z);
+		if (colored)
+		{
+			glColor3f((currentEdge->vert->position.x - minCoordinate.x) / (maxCoordinate.x - minCoordinate.x), (currentEdge->vert->position.y - minCoordinate.y) / (maxCoordinate.y - minCoordinate.y), (currentEdge->vert->position.z - minCoordinate.z) / (maxCoordinate.z - minCoordinate.z));
+		}
+		else
+		{
+			glColor3f(0.5, 0.5, 0.5);
+		}
+		
 		glVertex3f(currentEdge->vert->position.x, currentEdge->vert->position.y, currentEdge->vert->position.z);
 		currentEdge = currentEdge->next;
 	} while (currentEdge != startEdge);
@@ -210,7 +220,6 @@ void HalfEdgeEncoder::render()
 		case FLAT_SHADING:
 			for (int i = 0; i < m_faces->size(); i++)
 			{
-				glColor3f(0.5, 0.5, 0.5);
 				glShadeModel(GL_FLAT);
 				glBegin(GL_TRIANGLES);
 				//glNormal3f(m_faces->at(i)->normal.x, m_faces->at(i)->normal.y, m_faces->at(i)->normal.z);
@@ -221,7 +230,6 @@ void HalfEdgeEncoder::render()
 		case SMOOTH_SHADING:
 			for (int i = 0; i < m_faces->size(); i++)
 			{
-				glColor3f(0.5, 0.5, 0.5);
 				glShadeModel(GL_SMOOTH);
 				glBegin(GL_TRIANGLES);
 				//glNormal3f(m_faces->at(i)->normal.x, m_faces->at(i)->normal.y, m_faces->at(i)->normal.z);
@@ -250,6 +258,8 @@ float HalfEdgeEncoder::scaleModelIntoUnitSize(Vector3Point minCorrd, Vector3Poin
 		m_vertice->at(i)->position = m_vertice->at(i)->position * ratio;
 		m_vertice->at(i)->normal = m_vertice->at(i)->normal * ratio * ratio;
 	}
+	minCoordinate = minCorrd * ratio;
+	maxCoordinate = maxCoord * ratio;
 
 	return ratio;
 }

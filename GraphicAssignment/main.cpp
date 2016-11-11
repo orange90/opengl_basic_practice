@@ -21,18 +21,43 @@ using namespace System::Windows::Forms;
 #define CMD_RESET_CAMARA 1006
 #define DIRECTION_RADIO_BOX 1007
 #define PROJECTION_BOX 1008
+#define COLOR_CHECKBOX 1009
+#define LIGHTING_CHECKBOX 1010
+#define LIGHT0_CHECKBOX 1011
+#define LIGHT1_CHECKBOX 1012
+#define AMBIENT_INTENSITY 1013
+#define LIGHT0_INTENSITY 1014
+#define LIGHT1_INTENSITY 1015
 
 
 #define MATERIAL_DIFFUSE 101
 #define MATERIAL_SPECULAR 102
 
+
+GLfloat light0_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+GLfloat light0_diffuse[] = { .6f, .6f, 1.0f, 1.0f };
+GLfloat light0_position[] = { .5f, .5f, 1.0f, 0.0f };
+
+GLfloat light1_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+GLfloat light1_diffuse[] = { .9f, .6f, 0.0f, 1.0f };
+GLfloat light1_position[] = { -1.0f, -1.0f, 1.0f, 0.0f };
+
+GLfloat lmodel_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
+
 GLUI_Listbox *modeList;
 GLUI_Rotation *glRotateBall;
 GLUI_Checkbox *showVertexNormalBox;
+GLUI_Checkbox *showColorBox;
+GLUI_Checkbox *showLightingBox;
+GLUI_Checkbox *showLight0Box;
+GLUI_Checkbox *showLight1Box;
 GLUI_Listbox *materialList;
 GLUI_Listbox *shadingList;
 GLUI_RadioGroup *directiongroup;
 GLUI_Listbox *projectionBox;
+GLUI_Spinner *ambientIntensitySpinner;
+GLUI_Spinner *light0IntensitySpinner;
+GLUI_Spinner *light1IntensitySpinner;
 
 MFileParser *mParser;
 HalfEdgeEncoder *HEEncoder;
@@ -45,6 +70,9 @@ double zNear = 1.0, zFar = 100.0;
 double g_fov = 45.0;
 Vector3Point g_center;
 bool drawNormal = false;
+int ambientintensity;
+int light0intensity;
+int light1intensity;
 
 static int press_x, press_y;
 static float x_angle = 0.0;
@@ -59,7 +87,9 @@ static int xform_mode = 0;
 int initRenderMode = LINE_MODE;
 
 int cameraDirection;
-
+int showLighting = 0;
+int light0On = 0;
+int light1On = 0;
 void drawGround();
 void drawAxis(float rate);
 void draw_z_axis(float rate);
@@ -70,7 +100,11 @@ void mymouse(int button, int state, int x, int y);
 void resetCamera();
 void chooseDirection();
 void selectProjection();
-
+void refreshLight();
+void refreshLight0();
+void refreshLight1();
+void refreshIntensity1();
+void refreshIntensity0();
 
 void myDisplay(void)
 {
@@ -141,18 +175,31 @@ void initGL(void)
 	glPolygonOffset(1.0, 1.0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT, GL_DIFFUSE);
 
-	GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0 }; // light position
-	GLfloat white_light[] = { 1.0, 1.0, 1.0, 1.0 }; // light color
-	GLfloat lmodel_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, white_light);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, white_light);
+
+	
+	glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light0_diffuse);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+	//glLightModelfv(GL_AMBIENT, light0_ambient);
+
+	glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light1_diffuse);
+
+	glEnable(GL_NORMALIZE);
+	refreshLight();
+	refreshLight0();
+	refreshLight1();
+	refreshIntensity0();
+	refreshIntensity1();
+	
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
@@ -214,14 +261,21 @@ void menuCallBack(int key)
 	}
 	if (key == METERIAL_TYPE_LIST_BOX)
 	{
+
+		// diffuse material
+		//float diffuse_material[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		// specular material
+		//float specular_material[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 		if (materialList->get_int_val() == MATERIAL_DIFFUSE)
 		{
-			glColorMaterial(GL_FRONT, GL_DIFFUSE);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 		}
 		else if (materialList->get_int_val() == MATERIAL_SPECULAR)
 		{
-			glColorMaterial(GL_FRONT, GL_SPECULAR);
+			glColorMaterial(GL_FRONT_AND_BACK, GL_SPECULAR);
 		}
+		refreshIntensity0();
+		refreshIntensity1();
 	}
 	if (key == CMD_RESET_CAMARA)
 	{
@@ -236,10 +290,97 @@ void menuCallBack(int key)
 		cameraDirection = directiongroup->get_int_val();
 		resetCamera();
 	}
-	if (key == PROJECTION_BOX)
-	{
-		
+	if (key == COLOR_CHECKBOX){
+		HEEncoder->colored = (showColorBox->get_int_val() == 1);
 	}
+	if (key == LIGHTING_CHECKBOX){
+		showLighting = (showLightingBox->get_int_val() == 1);
+		refreshLight();
+	}
+	if (key == LIGHT0_CHECKBOX){
+		light0On = (showLight0Box->get_int_val() == 1);
+		refreshLight0();
+	}
+	if (key == LIGHT1_CHECKBOX){
+		light1On = (showLight1Box->get_int_val() == 1);
+		refreshLight1();
+	}
+	if (key == AMBIENT_INTENSITY)
+	{
+		/*float newambient[4];
+		memcpy(newambient, light0_ambient, 4 * sizeof(float));
+		for (size_t i = 0; i < 3; i++)
+		{
+			newambient[i] *= (float)ambientintensity / 10;
+		}
+		glLightModelfv(GL_AMBIENT, newambient);*/
+	}
+	if (key == LIGHT1_INTENSITY)
+	{
+		refreshIntensity1();
+	}
+	if (key == LIGHT0_INTENSITY)
+	{
+		refreshIntensity0();
+	}
+}
+
+void refreshLight()
+{
+	showLighting ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);
+}
+
+void refreshLight0()
+{
+	light0On ? glEnable(GL_LIGHT0) : glDisable(GL_LIGHT0);
+}
+
+void refreshIntensity0()
+{
+	float newlight0[4];
+	memcpy(newlight0, light0_diffuse, 4 * sizeof(float));
+	for (size_t i = 0; i < 3; i++)
+	{
+		newlight0[i] *= (float)light0intensity / 10;
+		//newambient[i] *= (float)light0intensity / 10;
+	}
+	if (materialList->get_int_val() == MATERIAL_DIFFUSE)
+	{
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, newlight0);
+	}
+	else
+	{
+		glLightfv(GL_LIGHT0, GL_SPECULAR, newlight0);
+	}
+	//glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+}
+
+void refreshIntensity1()
+{
+	float newambient[4];
+	memcpy(newambient, light1_ambient, 4 * sizeof(float));
+	float newlight1[4];
+	memcpy(newlight1, light1_diffuse, 4 * sizeof(float));
+	for (size_t i = 0; i < 3; i++)
+	{
+		newlight1[i] *= (float)light1intensity / 10;
+		newambient[i] *= (float)light1intensity / 10;
+	}
+	//glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
+	//glLightfv(GL_LIGHT1, GL_AMBIENT, newambient);
+	if (materialList->get_int_val() == MATERIAL_DIFFUSE)
+	{
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, newlight1);
+	}
+	else
+	{
+		glLightfv(GL_LIGHT1, GL_SPECULAR, newlight1);
+	}
+}
+
+void refreshLight1()
+{
+	light1On ? glEnable(GL_LIGHT1) : glDisable(GL_LIGHT1);
 }
 
 void selectProjection()
@@ -298,7 +439,8 @@ void initMenu()
 {
 	glutInitWindowSize(800, 800);
 	mainWin = glutCreateWindow("Huang Zhe 's Graphic Assignment");
-	GLUI *glui = GLUI_Master.create_glui("fff",0,800,0);// (mainWin, GLUI_SUBWINDOW_RIGHT);
+	GLUI *glui = GLUI_Master.create_glui_subwindow(mainWin, GLUI_SUBWINDOW_RIGHT);
+	glui->set_main_gfx_window(mainWin);
 	GLUI_Master.set_glutIdleFunc(myGlutIdle);
 	GLUI_Master.set_glutReshapeFunc(myGlutReshape);
 	GLUI_Master.auto_set_viewport();
@@ -315,7 +457,26 @@ void initMenu()
 
 	//-----------------------------------------------------
 	//control panel
-	showVertexNormalBox = glui->add_checkbox_to_panel(controlPanel,"Show Vertex Normal", 0, SHOW_NORMAL_CHECK_BOX_ID, menuCallBack);
+	showVertexNormalBox = glui->add_checkbox_to_panel(controlPanel,"Show Vertex Normal:", 0, SHOW_NORMAL_CHECK_BOX_ID, menuCallBack);
+	showColorBox = glui->add_checkbox_to_panel(controlPanel, "Colorful:", 0, COLOR_CHECKBOX, menuCallBack);
+	GLUI_Panel *lightpanel = glui->add_panel_to_panel(controlPanel, "Light Control");
+	showLightingBox = glui->add_checkbox_to_panel(lightpanel, "Lighting:", &showLighting, LIGHTING_CHECKBOX, menuCallBack);
+	showLight0Box = glui->add_checkbox_to_panel(lightpanel, "Show Light0:", &light0On, LIGHT0_CHECKBOX, menuCallBack);
+	showLight1Box = glui->add_checkbox_to_panel(lightpanel, "Show Light1:", &light1On, LIGHT1_CHECKBOX, menuCallBack);
+	showLightingBox->set_int_val(1);
+	showLight0Box->set_int_val(1);
+	showLight1Box->set_int_val(1);
+
+	GLUI_Panel *spinnerPanel = glui->add_panel_to_panel(lightpanel, "Intensity");
+	//ambientIntensitySpinner = glui->add_spinner_to_panel(spinnerPanel, "Ambient", 2, &ambientintensity, AMBIENT_INTENSITY, menuCallBack);
+	light0IntensitySpinner = glui->add_spinner_to_panel(spinnerPanel, "Light0", 2, &light0intensity, LIGHT0_INTENSITY,menuCallBack);
+	light1IntensitySpinner = glui->add_spinner_to_panel(spinnerPanel, "Light1", 2, &light1intensity , LIGHT1_INTENSITY, menuCallBack);
+	//ambientIntensitySpinner->set_int_limits(0, 10);
+	light0IntensitySpinner->set_int_limits(0, 10);
+	light1IntensitySpinner->set_int_limits(0, 10);
+	//ambientIntensitySpinner->set_int_val(10);
+	light0IntensitySpinner->set_int_val(10);
+	light1IntensitySpinner->set_int_val(10);
 	modeList = glui->add_listbox_to_panel(controlPanel, "Render Mode:", &initRenderMode, MODE_CHOOSE_BOX, menuCallBack);
 	modeList->add_item(POINT_MODE, "POINT_MODE");
 	modeList->add_item(LINE_MODE,"LINE_MODE"); 
@@ -331,6 +492,7 @@ void initMenu()
 	projectionBox->add_item(1, "Orthogonal");
 	glui->add_separator_to_panel(controlPanel);
 	glui->add_button_to_panel(controlPanel,"Reset Camera", CMD_RESET_CAMARA, menuCallBack);
+
 	//glRotateBall = glui->add_rotation("Rotate\nOr use mouse left button", 0, -1, menuCallBack);
 	//-----------------------------------------------------
 	//radio panel
@@ -350,6 +512,7 @@ int main(int argc, char * argv[])
 	glutDisplayFunc(&myDisplay);
 	glutMotionFunc(mymotion);
 	glutMouseFunc(mymouse);
+	glutReshapeFunc(myGlutReshape);
 	glutMainLoop();
 	return 0;
 }
@@ -440,7 +603,7 @@ void drawGround()
 	MyDrawLineFunc(0, -100, 0, 100);
 	MyDrawLineFunc(-100, 0, 100, 0);
 	glLineWidth(1);
-	glEnable(GL_LIGHTING);
+	refreshLight();
 }
 
 
@@ -488,7 +651,7 @@ void drawAxis(float rate)
 	draw_y_axis(rate);
 	glColor3f(1, 0, 0);
 	draw_x_axis(rate);
-	glEnable(GL_LIGHTING);
+	refreshLight();
 }
 
 
